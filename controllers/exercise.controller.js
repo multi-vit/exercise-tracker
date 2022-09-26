@@ -6,24 +6,27 @@ export function createExercise(req, res) {
   console.log(`The exercise is:`);
   console.log(req.body);
   console.log(`User ID is: ${req.params._id}`);
-  let dateString;
+  let date;
   if (req.body.date) {
     console.log(`Date provided, creating date string`);
-    const splitDate = req.body.date.split("-");
-    const providedDate = new Date(splitDate[0], splitDate[1] - 1, splitDate[2]);
-    dateString = providedDate.toDateString();
-    console.log(`Date set to ${dateString}`);
+    date = req.body.date;
+    console.log(`Date set to ${date}`);
   }
   if (!req.body.date) {
     console.log(`No date provided, creating date`);
-    dateString = new Date().toDateString();
-    console.log(`Date set to ${dateString}`);
+    const currentDate = new Date();
+    date = `${currentDate.toLocaleString("default", {
+      year: "numeric",
+    })}-${currentDate.toLocaleString("default", {
+      month: "2-digit",
+    })}-${currentDate.toLocaleString("default", { day: "2-digit" })}`;
+    console.log(`Date set to ${date}`);
   }
   const newExercise = new Exercise({
     userId: req.params._id,
     description: req.body.description,
     duration: req.body.duration,
-    date: dateString,
+    date: date,
   });
   User.find({ _id: req.params._id })
     .then((user) => {
@@ -37,7 +40,7 @@ export function createExercise(req, res) {
           res.json({
             _id: exercise.userId,
             username: user[0].username,
-            date: exercise.date,
+            date: exercise.date.toDateString(),
             duration: exercise.duration,
             description: exercise.description,
           });
@@ -51,4 +54,41 @@ export function createExercise(req, res) {
     .catch((err) => {
       console.log(err.message || "Some error occurred whilst getting users");
     });
+}
+
+export function getLogs(req, res) {
+  let { from, to, limit } = req.query;
+  from = from || "1900-01-01";
+  to = to || "3000-01-01";
+  limit = limit || 100;
+  console.log(`Limit is: ${limit}`);
+  console.log(`The User ID is: ${req.params._id}`);
+  User.find({ _id: req.params._id }).then((user) => {
+    Exercise.find({ userId: req.params._id })
+      .where("date")
+      .gt(from)
+      .lt(to)
+      .limit(limit)
+      .then((exercises) => {
+        console.log("Returning user:");
+        console.log(user);
+        console.log("Returning exercise:");
+        console.log(exercises);
+        let logArray = [];
+        exercises.map((exercise) => {
+          const parsedExercise = {
+            date: exercise.date.toDateString(),
+            duration: exercise.duration,
+            description: exercise.description,
+          };
+          logArray.push(parsedExercise);
+        });
+        res.json({
+          _id: user[0]._id,
+          username: user[0].username,
+          count: exercises.length,
+          log: logArray,
+        });
+      });
+  });
 }

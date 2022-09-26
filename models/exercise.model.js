@@ -3,7 +3,7 @@ export default function exerciseSchema(mongoose) {
     userId: String,
     description: String,
     duration: Number,
-    date: String,
+    date: Date,
     //Prevent version key being selected when querying (but keep creating it as per best practice)
     __v: { type: Number, select: false },
   });
