@@ -22,9 +22,9 @@ Each user should be an object✅
 ## EXERCISE
 
 POST
-path is /api/users/:_id/exercises
-Model is description (string), duration (number), and optionally date (string). If no date is supplied, the current date will be used.
-Respond with object containing those fields
+path is /api/users/:_id/exercises✅
+Model is userId, description (string), duration (number), and optionally date (string). If no date is supplied, the current date will be used.✅
+Respond with object containing those fields✅
 
 ## LOG
 
