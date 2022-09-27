@@ -69,6 +69,7 @@ export function getLogs(req, res) {
       .gt(from)
       .lt(to)
       .limit(limit)
+      .select("-_id -userId")
       .then((exercises) => {
         console.log("Returning user:");
         console.log(user);
