@@ -7,7 +7,7 @@ Completed as part of freeCodeCamp's Backend and API certification.
 - Solidified learning of Mongoose for MongoDB
 - Use of multiple schema
 - Chaining queries in Mongoose
-- Use of from/to when searching dates and limit to restrict number of results in Mongoose
+- Use of .gt()/.lt() (from/to) when searching dates, limit() to restrict number of results and search() to restrict fields returned in Mongoose
 - Writing scripts that will remove all documents from the collection
 - Use of logical OR operator to set default values for req.query keys if they don't exist
 
